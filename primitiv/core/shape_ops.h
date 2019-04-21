@@ -106,6 +106,13 @@ Shape permute_dims(const Shape &x, const std::vector<std::uint32_t> &perm);
  */
 Shape matmul(const Shape &l, const Shape &r);
 
+/** Calculates a shape of lower triangular system solver.
+ * @param l Shape of the left hand side.
+ * @param r Shape of the right hand side.
+ * @return Calculated shape.
+ */
+Shape ltrs(const Shape &l, const Shape &r);
+
 /**
  * Calculates a resulting shape of convolution.
  * @param x Shape of the input tensor.

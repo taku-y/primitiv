@@ -159,6 +159,16 @@ Shape matmul(const Shape &l, const Shape &r) {
   return Shape({l[0], r[1]}, std::max(l.batch(), r.batch()));
 }
 
+Shape ltrs(const Shape &l, const Shape &r) {
+  if (!l.is_matrix() || !r.is_matrix() || l[0] != l[1] || 
+      l[0] != r[0] || !l.has_compatible_batch(r)) {
+    PRIMITIV_THROW_ERROR(
+        "Invalid shapes to solve lower triangular system: "
+        << l.to_string() << ", " << r.to_string());
+  }
+  return Shape({l[0], r[1]}, std::max(l.batch(), r.batch()));
+}
+
 Shape conv2d(
     const Shape &x, const Shape &w,
     std::uint32_t padding0, std::uint32_t padding1,

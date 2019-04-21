@@ -408,6 +408,7 @@ DEV_FW_AB(multiply, shape_ops::elementwise);
 DEV_FW_AB(divide, shape_ops::elementwise);
 DEV_FW_AB(pow, shape_ops::elementwise);
 DEV_FW_AB(matmul, shape_ops::matmul);
+DEV_FW_AB(ltrs, shape_ops::ltrs);
 
 Tensor Device::conv2d_fw(
     const Tensor &x, const Tensor &w,
@@ -443,6 +444,7 @@ DEV_BW_AB(multiply, shape_ops::elementwise);
 DEV_BW_AB(divide, shape_ops::elementwise);
 DEV_BW_AB(pow, shape_ops::elementwise);
 DEV_BW_AB(matmul, shape_ops::matmul);
+DEV_BW_AB(ltrs, shape_ops::ltrs);
 
 void Device::conv2d_bw(
     const Tensor &x, const Tensor &w, const Tensor &y, const Tensor &gy,

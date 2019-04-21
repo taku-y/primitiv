@@ -213,6 +213,11 @@ Tensor matmul(const Tensor &a, const Tensor &b) {
 }
 
 template<>
+Tensor ltrs(const Tensor &a, const Tensor &b) {
+  return a.device().ltrs_fw(a, b);
+}
+
+template<>
 Tensor abs(const Tensor &x) {
   return x.device().abs_fw(x);
 }

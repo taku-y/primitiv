@@ -194,6 +194,7 @@ public:
   Tensor divide_fw(const Tensor &a, const Tensor &b);
   Tensor pow_fw(const Tensor &a, const Tensor &b);
   Tensor matmul_fw(const Tensor &a, const Tensor &b);
+  Tensor ltrs_fw(const Tensor &a, const Tensor &b);
 
   void add_bw(
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
@@ -211,6 +212,9 @@ public:
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
       Tensor &ga, Tensor &gb);
   void matmul_bw(
+      const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
+      Tensor &ga, Tensor &gb);
+  void ltrs_bw(
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
       Tensor &ga, Tensor &gb);
 
@@ -462,6 +466,7 @@ private:
   virtual void divide_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) = 0;
   virtual void pow_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) = 0;
   virtual void matmul_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) = 0;
+  virtual void ltrs_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) = 0;
 
   virtual void add_bw_impl(
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
@@ -479,6 +484,9 @@ private:
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
       Tensor &ga, Tensor &gb) = 0;
   virtual void matmul_bw_impl(
+      const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
+      Tensor &ga, Tensor &gb) = 0;
+  virtual void ltrs_bw_impl(
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
       Tensor &ga, Tensor &gb) = 0;
 

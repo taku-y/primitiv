@@ -198,6 +198,11 @@ Node matmul(const Node &a, const Node &b) {
 }
 
 template<>
+Node ltrs(const Node &a, const Node &b) {
+  return REGX(a, LowerTriangularSolve(), a, b)[0];
+}
+
+template<>
 Node abs(const Node &x) {
   return REGX(x, Abs(), x)[0];
 }

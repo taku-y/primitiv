@@ -666,6 +666,18 @@ template<typename Var>
 type_traits::Identity<Var> matmul(const Var &a, const Var &b);
 
 /**
+ * Solve a lower triangular system AX=B.
+ * @param a A variable representing an argument \f$ A \f$.
+ *          It must be a lower triangular square matrix.
+ * @param b A variable representing an argument \f$ B \f$. The shape of `b`
+ *          must be either a scalar, a column vector or a matrix, and
+ *          `b.shape()[0]` must be equal to `a.shape()[1]`.
+ * @return A new variable representing \f$ X \f$.
+ */
+template<typename Var>
+type_traits::Identity<Var> ltrs(const Var &a, const Var &b);
+
+/**
  * Applies an elementwise absolute function.
  * @param x A variable representing an argument \f$ x \f$.
  * @return A variable representing \f$ \vert x \vert \f$.

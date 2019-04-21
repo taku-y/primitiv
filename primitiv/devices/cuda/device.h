@@ -163,6 +163,7 @@ private:
   void divide_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) override;
   void pow_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) override;
   void matmul_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) override;
+  void ltrs_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) override;
 
   void add_bw_impl(
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
@@ -180,6 +181,9 @@ private:
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
       Tensor &ga, Tensor &gb) override;
   void matmul_bw_impl(
+      const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
+      Tensor &ga, Tensor &gb) override;
+  void ltrs_bw_impl(
       const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
       Tensor &ga, Tensor &gb) override;
 

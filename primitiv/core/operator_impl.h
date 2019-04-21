@@ -320,6 +320,7 @@ private:
 };
 
 PRIMITIV_DECL_BINARY(MatrixMultiply);
+PRIMITIV_DECL_BINARY(LowerTriangularSolve);
 
 PRIMITIV_DECL_UNARY(Abs);
 PRIMITIV_DECL_UNARY(Sqrt);
