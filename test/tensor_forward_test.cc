@@ -1926,6 +1926,19 @@ TEST_F(TensorForwardTest, CheckInvalidMatMul) {
   }
 }
 
+TEST_F(TensorForwardTest, CheckLowerTriangularSolve) {
+  const vector<float> a_data {1, 2, 3, 4, 2, 1, 0, 5};
+  const vector<float> b_data {4, 4, 4, 4, 4, 5, 6, 7};
+  const vector<float> y_data {4, -1, 4, -1, 2, .6, 3, .8};
+  for (Device *dev : devices) {
+    const Tensor a = dev->new_tensor_by_vector(Shape({2, 2}, 2), a_data);
+    const Tensor b = dev->new_tensor_by_vector(Shape({2, 2}, 2), b_data);
+    const Tensor y = ltrs(a, b);
+    EXPECT_EQ(Shape({2, 2}, 2), y.shape());
+    EXPECT_TRUE(vector_match(y_data, y.to_vector()));
+  }
+}
+
 TEST_F(TensorForwardTest, CheckAbs) {
   const vector<float> x_data {
     .25, .5, .0, 1, 2, 4,

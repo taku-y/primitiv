@@ -1667,6 +1667,25 @@ TEST_F(TensorBackwardTest, CheckMatMulN1) {
   }
 }
 
+TEST_F(TensorBackwardTest, CheckLowerTriangularSolve) {
+  for (Device *dev : devices) {
+    const Tensor a = dev->new_tensor_by_vector(
+        Shape({2, 2}, 2), {1, 2, 3, 4, 2, 1, 0, 5});
+    const Tensor b = dev->new_tensor_by_vector(
+        Shape({2, 2}, 2), {4, 4, 4, 4, 4, 5, 6, 7});
+    const Tensor y = dev->ltrs_fw(a, b);
+    const Tensor gy = dev->new_tensor_by_vector(
+        Shape({2, 2}, 2), {1, 1, 1, 1, 1, 1, 1, 1});
+    Tensor ga = dev->new_tensor_by_constant(a.shape(), 0);
+    Tensor gb = dev->new_tensor_by_constant(b.shape(), 0);
+    dev->ltrs_bw(a, b, y, gy, ga, gb);
+    const vector<float> ga_val {-4, -2, 1, .5, -2, -1, -.56, -.28};
+    const vector<float> gb_val {.5, .25, .5, .25, .4, .2, .4, .2};
+    EXPECT_TRUE(vector_match(ga_val, ga.to_vector()));
+    EXPECT_TRUE(vector_match(gb_val, gb.to_vector()));
+  }
+}
+
 TEST_F(TensorBackwardTest, CheckBatchPickNN) {
   const vector<float> a_data {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
   struct TestCase {
