@@ -342,6 +342,27 @@ PRIMITIV_C_STATUS primitivApplyTensorMatmul(
   return PRIMITIV_C_OK;
 } PRIMITIV_C_HANDLE_EXCEPTIONS
 
+PRIMITIV_C_STATUS primitivApplyNodeLtrs(
+    const primitivNode_t *a, const primitivNode_t *b, primitivNode_t **y) try {
+  PRIMITIV_C_CHECK_NOT_NULL(a);
+  PRIMITIV_C_CHECK_NOT_NULL(b);
+  PRIMITIV_C_CHECK_NOT_NULL(y);
+  *y = to_c_ptr_from_value(
+      primitiv::functions::ltrs(*to_cpp_ptr(a), *to_cpp_ptr(b)));
+  return PRIMITIV_C_OK;
+} PRIMITIV_C_HANDLE_EXCEPTIONS
+
+PRIMITIV_C_STATUS primitivApplyTensorLtrs(
+    const primitivTensor_t *a, const primitivTensor_t *b,
+    primitivTensor_t **y) try {
+  PRIMITIV_C_CHECK_NOT_NULL(a);
+  PRIMITIV_C_CHECK_NOT_NULL(b);
+  PRIMITIV_C_CHECK_NOT_NULL(y);
+  *y = to_c_ptr_from_value(
+      primitiv::functions::ltrs(*to_cpp_ptr(a), *to_cpp_ptr(b)));
+  return PRIMITIV_C_OK;
+} PRIMITIV_C_HANDLE_EXCEPTIONS
+
 PRIMITIV_C_IMPL_UNARY_FUNC(Abs, abs);
 PRIMITIV_C_IMPL_UNARY_FUNC(Sqrt, sqrt);
 PRIMITIV_C_IMPL_UNARY_FUNC(Exp, exp);
