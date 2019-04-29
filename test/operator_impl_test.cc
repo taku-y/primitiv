@@ -125,6 +125,20 @@ public:
         new Tensor(functions::zeros<Tensor>(*arg_shapes[1], *dev)));
   }
 
+  void setup_2args_lower_triangular_solve() {
+    arg_shapes.emplace_back(new Shape({2, 2}, 3));
+    arg_shapes.emplace_back(new Shape({2, 2}, 3));
+    // A_12 is set but ignored
+    arg_values.emplace_back(new Tensor(dev->new_tensor_by_vector(
+        *arg_shapes[0], {1, 2, 3, 4, 2, 1, 0, 5, -1, -2, -3, -4})));
+    arg_values.emplace_back(new Tensor(dev->new_tensor_by_vector(
+        *arg_shapes[1], {4, 4, 4, 4, 4, 5, 6, 7, 8, 8, 8, 8})));
+    arg_grads.emplace_back(
+        new Tensor(functions::zeros<Tensor>(*arg_shapes[0], *dev)));
+    arg_grads.emplace_back(
+        new Tensor(functions::zeros<Tensor>(*arg_shapes[1], *dev)));
+  }
+
   void reset_gradients() {
     for (Tensor *x : arg_grads) x->reset(0);
   }
@@ -1141,6 +1155,20 @@ TEST_F(OperatorImplTest, CheckMatrixMultiply) {
     {3, 7, 3, 7, 0, 0, 0, 0, -3, -7, -3, -7},
   };
   TEST_2ARGS(MatrixMultiply);
+}
+
+TEST_F(OperatorImplTest, CheckLowerTriangularSolve) {
+  // y = a^-1 . b where a is lower triangular matrix
+  // dy/da = -dy/db * y^T
+  // dy/db = a^-T
+  setup_2args_lower_triangular_solve();
+  const Shape ret_shape({2, 2}, 3);
+  const vector<float> ret_data {4, -1, 4, -1, 2, .6, 3, .8, -8, 2, -8, 2};
+  const vector<vector<float>> bw_grads {
+    {-4, -2, 1, .5, -2, -1, -.56, -.28, -8, -4, 2, 1},
+    {.5, .25, .5, .25, .4, .2, .4, .2, -.5, -.25, -.5, -.25,},
+  };
+  TEST_2ARGS(LowerTriangularSolve);
 }
 
 TEST_F(OperatorImplTest, CheckAbs) {
