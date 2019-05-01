@@ -40,6 +40,8 @@ void Eigen::ltrs_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) {
 void Eigen::ltrs_bw_impl(
 const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
     Tensor &ga, Tensor &gb) {
+  // Gradient of upper part of a is forced to be 0, 
+  // based on implementation of torch
   const std::uint32_t di = a.shape()[0];
   const std::uint32_t dj = a.shape()[1]; // dj should be equal to di
   const std::uint32_t dk = b.shape()[1];
@@ -63,7 +65,10 @@ const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
       EMap<EMatrixXf> gaa(dest_ga + n * a_skip, di, dj);
       EMap<EMatrixXf> gbb(dest_gb + n * b_skip, dj, dk);
       gbb.noalias() += aa.transpose().triangularView<::Eigen::Upper>().solve(gyy);
-      gaa.noalias() -= aa.transpose().triangularView<::Eigen::Upper>().solve(gyy) * yy.transpose();
+      gaa.noalias() -= EMatrixXf((
+        aa.transpose().triangularView<::Eigen::Upper>().solve(gyy) * \
+        yy.transpose()).triangularView<::Eigen::Lower>()
+      );
     }
   }
   else {
@@ -75,7 +80,10 @@ const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
     EMap<EMatrixXf> gaa(dest_ga, di, dj);
     EMap<EMatrixXf> gbb(dest_gb, dj, dk_batch);
     gbb.noalias() += aa.transpose().triangularView<::Eigen::Upper>().solve(gyy);
-    gaa.noalias() -= aa.transpose().triangularView<::Eigen::Upper>().solve(gyy) * yy.transpose();
+    gaa.noalias() -= EMatrixXf((
+      aa.transpose().triangularView<::Eigen::Upper>().solve(gyy) * \
+      yy.transpose()).triangularView<::Eigen::Lower>()
+    );
   }
 }
 

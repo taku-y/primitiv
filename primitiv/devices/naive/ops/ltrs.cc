@@ -68,6 +68,8 @@ void Naive::ltrs_fw_impl(const Tensor &a, const Tensor &b, Tensor &y) {
 void Naive::ltrs_bw_impl(
     const Tensor &a, const Tensor &b, const Tensor &y, const Tensor &gy,
     Tensor &ga, Tensor &gb) {
+  // Gradient of upper part of a is forced to be 0, 
+  // based on implementation of torch
   const std::uint32_t di = a.shape()[0];
   const std::uint32_t dj = a.shape()[1]; // dj should be equal to di
   const std::uint32_t dk = b.shape()[1];
@@ -86,13 +88,16 @@ void Naive::ltrs_bw_impl(
     const std::uint32_t bs = a.shape().batch();
     std::vector<float> gb_(gy.shape().volume());
     for (std::uint32_t n = 0; n < bs; ++n) {
+      // gb
       solve_upper_tr(
         src_a + n * a_skip, src_gy + n * y_skip, gb_.data(),
         di, dj, dk
       );
       inplace_add_raw(dest_gb + n * b_skip, gb_.data(), dj * dk);
+
+      // ga
       for (std::uint32_t i=0; i < di; i++) {
-        for (std::uint32_t j=0; j < dj; j++) {
+        for (std::uint32_t j=0; j < i + 1; j++) {
           for (std::uint32_t k=0; k < dk; k++) {
             dest_ga[i + j * di + n * a_skip] -= \
               gb_.data()[i + k * di] * \
@@ -103,13 +108,16 @@ void Naive::ltrs_bw_impl(
     }
   } else {
     std::vector<float> gb_(gy.shape().size());
+    // gb
     solve_upper_tr(
       src_a, src_gy, gb_.data(),
       di, dj, dk * gb.shape().batch()
     );
+
+    // ga
     inplace_add_raw(dest_gb, gb_.data(), dj * dk * gb.shape().batch());
     for (std::uint32_t i=0; i < di; i++) {
-      for (std::uint32_t j=0; j < dj; j++) {
+      for (std::uint32_t j=0; j < i + 1; j++) {
         for (std::uint32_t k=0; k < dk * gb.shape().batch(); k++) {
           dest_ga[i + j * di] -= \
             gb_.data()[i + k * di] * \

@@ -1165,7 +1165,7 @@ TEST_F(OperatorImplTest, CheckLowerTriangularSolve) {
   const Shape ret_shape({2, 2}, 3);
   const vector<float> ret_data {4, -1, 4, -1, 2, .6, 3, .8, -8, 2, -8, 2};
   const vector<vector<float>> bw_grads {
-    {-4, -2, 1, .5, -2, -1, -.56, -.28, -8, -4, 2, 1},
+    {-4, -2, 0, .5, -2, -1, 0, -.28, -8, -4, 0, 1},
     {.5, .25, .5, .25, .4, .2, .4, .2, -.5, -.25, -.5, -.25,},
   };
   TEST_2ARGS(LowerTriangularSolve);

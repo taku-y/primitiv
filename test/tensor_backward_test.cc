@@ -1679,7 +1679,7 @@ TEST_F(TensorBackwardTest, CheckLowerTriangularSolve) {
     Tensor ga = dev->new_tensor_by_constant(a.shape(), 0);
     Tensor gb = dev->new_tensor_by_constant(b.shape(), 0);
     dev->ltrs_bw(a, b, y, gy, ga, gb);
-    const vector<float> ga_val {-4, -2, 1, .5, -2, -1, -.56, -.28};
+    const vector<float> ga_val {-4, -2, 0, .5, -2, -1, 0, -.28};
     const vector<float> gb_val {.5, .25, .5, .25, .4, .2, .4, .2};
     EXPECT_TRUE(vector_match(ga_val, ga.to_vector()));
     EXPECT_TRUE(vector_match(gb_val, gb.to_vector()));
